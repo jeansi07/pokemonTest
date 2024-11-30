@@ -12,7 +12,7 @@ export const fetchAllPokemons = async (
 ) => {
   const data = (
     await axios.get<AllPokemonResponse>(
-      `https://pokeapi.co/api/v2/pokemon?offset=${name ? 1 : offset}&limit=${
+      `https://pokeapi.co/api/v2/pokemon?offset=${name ? 0 : offset}&limit=${
         name ? 10000 : limit
       }`
     )
