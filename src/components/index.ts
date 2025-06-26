@@ -3,3 +3,4 @@ export * from "./card";
 export * from "./charts";
 export * from "./loader";
 export * from "./modal";
+export * from "./select";
