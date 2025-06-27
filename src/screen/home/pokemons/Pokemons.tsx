@@ -73,7 +73,7 @@ export const Pokemons = () => {
   };
 
   const pokemonsToShow = () => {
-    if (selectTypes && filteredPokemons) {
+    if (selectTypes && filteredPokemons && searchPokemon === "") {
       const start = filteredPage * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE;
       return filteredPokemons.slice(start, end);
