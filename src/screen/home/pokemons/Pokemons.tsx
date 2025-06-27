@@ -4,13 +4,13 @@ import {
   fetchAllPokemons,
   fetchPokemonTypes,
 } from "../../../api/get/getPokemons";
-import { PokeCard } from "../../../components/card";
+import { PokeCard } from "../../../components/Card";
 
 import axios from "axios";
 import { Select } from "../../../components";
-import { PokemonCharts } from "../../../components/charts";
-import Loader from "../../../components/loader/Loader";
-import PokemonsDetails from "../../../components/modal/PokemonsDetails";
+import { PokemonCharts } from "../../../components/Charts";
+import Loader from "../../../components/Loader/Loader";
+import PokemonsDetails from "../../../components/Modal/PokemonsDetails";
 import { PokemonResponse } from "../../../interfaces/types";
 
 const ITEMS_PER_PAGE = 20;
@@ -119,16 +119,8 @@ export const Pokemons = () => {
           })) ?? []
         }
       />
-      <div>
-        <div>
-          <Select
-            onChange={}
-            selectTypes={types?.results.map((i) => i.name)}
-            values={}
-          />
-        </div>
-
-        <div className="p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5 justify-center items-center">
+        <div className="">
           <input
             className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400"
             type="text"
@@ -137,9 +129,23 @@ export const Pokemons = () => {
             placeholder="Busca tu pokemon favorito..."
           />
         </div>
+        <div>
+          <Select
+            onChange={(value: string) => setSelectTypes(value)}
+            selectTypes={types?.results.map((i) => i.name) ?? []}
+            values={selectTypes ?? ""}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 px-2 lg:px-0 gap-4 lg:grid-cols-3 md:grid-cols-2">
+        <>
+          {pokemonsToShow()?.length === 0 && (
+            <div className="col-span-3 text-center text-gray-500">
+              Pokemon no encontrado
+            </div>
+          )}
+        </>
         {pokemonsToShow()?.map((pokemon) => (
           <PokeCard
             onClick={() => setSelectPokemon(pokemon)}

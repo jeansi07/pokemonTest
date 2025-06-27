@@ -6,7 +6,7 @@ export interface AllPokemonResponse {
 }
 
 export interface TypePokemon {
-  onChange: (type: string | null) => void;
+  onChange: (type: string) => void;
   selectTypes: string[];
   values: string;
 }
