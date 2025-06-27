@@ -10,6 +10,7 @@ import axios from "axios";
 import { Select } from "../../../components";
 import { PokemonCharts } from "../../../components/Charts";
 import Loader from "../../../components/Loader/Loader";
+import { Logo } from "../../../components/Logo";
 import PokemonsDetails from "../../../components/Modal/PokemonsDetails";
 import { PokemonResponse } from "../../../interfaces/types";
 
@@ -109,6 +110,9 @@ export const Pokemons = () => {
 
   return (
     <main className="container py-3">
+      <div>
+        <Logo />
+      </div>
       <PokemonCharts
         onClick={({ name }) => setSelectTypes(name)}
         types={
@@ -119,9 +123,16 @@ export const Pokemons = () => {
           })) ?? []
         }
       />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5 justify-center items-center">
-        <div className="">
+      <div className="flex-col px-5 lg:px-0 lg:flex lg:flex-row gap-4 mb-5 items-center justify-between">
+        <div>
+          <label
+            htmlFor="name"
+            className="block mb-2 text-lg font-medium text-gray-700"
+          >
+            Busca tu Pokémon por nombre
+          </label>
           <input
+            id="name"
             className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400"
             type="text"
             value={searchPokemon}
@@ -129,6 +140,14 @@ export const Pokemons = () => {
             placeholder="Busca tu pokemon favorito..."
           />
         </div>
+        {selectTypes && (
+          <button
+            className=" text-sm text-blue-600 underline py-3 lg:py-0"
+            onClick={() => setSelectTypes(null)}
+          >
+            Ver todos los Pokémon
+          </button>
+        )}
         <div>
           <Select
             onChange={(value: string) => setSelectTypes(value)}
@@ -162,6 +181,7 @@ export const Pokemons = () => {
                 color: typesColors[type.type.name],
               })),
               image: pokemon.sprites.front_default,
+              id: pokemon.id,
             }}
           />
         ))}

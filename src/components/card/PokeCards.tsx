@@ -7,13 +7,14 @@ type PokemonData = {
   weigth: number;
   abilities: string[];
   types: { name: string; color: string }[];
+  id: number;
 };
 
 export const PokeCard: React.FC<{
   onClick: () => void;
   pokemon: PokemonData;
 }> = ({ pokemon, onClick }) => {
-  const { abilities, heigth, title, types, weigth, image } = pokemon;
+  const { abilities, heigth, title, types, weigth, image, id } = pokemon;
   return (
     <div
       onClick={onClick}
@@ -29,7 +30,10 @@ export const PokeCard: React.FC<{
       className="flex w-full  border-2 rounded-xl"
     >
       <div className="w-7/12 py-4 pl-4 h-full">
-        <h4 className="font-bold text-xl mb-2">{title}</h4>
+        <div className="flex justify-between items-center">
+          <h4 className="font-bold text-xl mb-2">{title}</h4>
+        </div>
+
         <ol className="ml-2 leading-5">
           <li>Heigth: {heigth}</li>
           <li>Weigth: {weigth}</li>
@@ -51,6 +55,9 @@ export const PokeCard: React.FC<{
       </div>
       <div className="w-5/12 flex">
         <img className="w-32 m-auto" src={image} />
+        <h4 className="font-bold text-xl p-2">
+          <span>{`#${id}`}</span>
+        </h4>
       </div>
     </div>
   );
