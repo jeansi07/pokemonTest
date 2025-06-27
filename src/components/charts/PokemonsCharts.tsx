@@ -59,7 +59,6 @@ export const PokemonCharts: React.FC<{
 
   return (
     <div>
-      <h2>Estadísticas de Pokémon por tipo</h2>
       <div className="grid xl:grid-cols-2 grid-cols-1 py-7 ">
         <div className="relative">
           <Bar

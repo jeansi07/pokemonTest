@@ -5,6 +5,12 @@ export interface AllPokemonResponse {
   results: Result[];
 }
 
+export interface TypePokemon {
+  onChange: (type: string) => void;
+  selectTypes: string[];
+  values: string;
+}
+
 export interface Result {
   name: string;
   url: string;

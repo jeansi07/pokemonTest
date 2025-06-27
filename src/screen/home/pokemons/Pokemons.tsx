@@ -4,12 +4,14 @@ import {
   fetchAllPokemons,
   fetchPokemonTypes,
 } from "../../../api/get/getPokemons";
-import { PokeCard } from "../../../components/card";
+import { PokeCard } from "../../../components/Card";
 
 import axios from "axios";
-import { PokemonCharts } from "../../../components/charts";
-import Loader from "../../../components/loader/Loader";
-import PokemonsDetails from "../../../components/modal/PokemonsDetails";
+import { Select } from "../../../components";
+import { PokemonCharts } from "../../../components/Charts";
+import Loader from "../../../components/Loader/Loader";
+import { Logo } from "../../../components/Logo";
+import PokemonsDetails from "../../../components/Modal/PokemonsDetails";
 import { PokemonResponse } from "../../../interfaces/types";
 
 const ITEMS_PER_PAGE = 20;
@@ -33,6 +35,14 @@ export const Pokemons = () => {
         searchPokemon
       ),
     { keepPreviousData: true }
+  );
+
+  const { data: filteredPokemons, refetch } = useQuery(
+    ["typePokemon", selectTypes],
+    () => fetchPokemonsByType(),
+    {
+      enabled: !!selectTypes,
+    }
   );
 
   const { data: types } = useQuery(["Type"], fetchPokemonTypes, {
@@ -63,27 +73,14 @@ export const Pokemons = () => {
     );
   };
 
-  const { data: filteredPokemons, refetch } = useQuery(
-    ["typePokemon", selectTypes],
-    () => fetchPokemonsByType(),
-    {
-      enabled: !!selectTypes,
-    }
-  );
-
   const pokemonsToShow = () => {
-    if (selectTypes && filteredPokemons) {
+    if (selectTypes && filteredPokemons && searchPokemon === "") {
       const start = filteredPage * ITEMS_PER_PAGE;
       const end = start + ITEMS_PER_PAGE;
       return filteredPokemons.slice(start, end);
     }
     return pokemons?.results;
   };
-
-  useEffect(() => {
-    setFilteredPage(0);
-    refetch();
-  }, [selectTypes]);
 
   const handlePreviousPage = () => {
     if (selectTypes) {
@@ -106,8 +103,16 @@ export const Pokemons = () => {
     }
   };
 
+  useEffect(() => {
+    setFilteredPage(0);
+    refetch();
+  }, [selectTypes]);
+
   return (
     <main className="container py-3">
+      <div>
+        <Logo />
+      </div>
       <PokemonCharts
         onClick={({ name }) => setSelectTypes(name)}
         types={
@@ -118,16 +123,48 @@ export const Pokemons = () => {
           })) ?? []
         }
       />
-      <div className="p-5">
-        <input
-          className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400"
-          type="text"
-          value={searchPokemon}
-          onChange={(e) => setSearchPokemon(e.target.value)}
-          placeholder="Busca tu pokemon favorito..."
-        />
+      <div className="flex-col px-5 lg:px-0 lg:flex lg:flex-row gap-4 mb-5 items-center justify-between">
+        <div>
+          <label
+            htmlFor="name"
+            className="block mb-2 text-lg font-medium text-gray-700"
+          >
+            Busca tu Pokémon por nombre
+          </label>
+          <input
+            id="name"
+            className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400"
+            type="text"
+            value={searchPokemon}
+            onChange={(e) => setSearchPokemon(e.target.value)}
+            placeholder="Busca tu pokemon favorito..."
+          />
+        </div>
+        {selectTypes && (
+          <button
+            className=" text-sm text-blue-600 underline py-3 lg:py-0"
+            onClick={() => setSelectTypes(null)}
+          >
+            Ver todos los Pokémon
+          </button>
+        )}
+        <div>
+          <Select
+            onChange={(value: string) => setSelectTypes(value)}
+            selectTypes={types?.results.map((i) => i.name) ?? []}
+            values={selectTypes ?? ""}
+          />
+        </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
+
+      <div className="grid grid-cols-1 px-2 lg:px-0 gap-4 lg:grid-cols-3 md:grid-cols-2">
+        <>
+          {pokemonsToShow()?.length === 0 && (
+            <div className="col-span-3 text-center text-gray-500">
+              Pokemon no encontrado
+            </div>
+          )}
+        </>
         {pokemonsToShow()?.map((pokemon) => (
           <PokeCard
             onClick={() => setSelectPokemon(pokemon)}
@@ -144,12 +181,13 @@ export const Pokemons = () => {
                 color: typesColors[type.type.name],
               })),
               image: pokemon.sprites.front_default,
+              id: pokemon.id,
             }}
           />
         ))}
       </div>
 
-      <div className="flex justify-between items-center my-5">
+      <div className="flex justify-between items-center my-5 px-3 lg:px-0">
         <button
           onClick={handlePreviousPage}
           disabled={selectTypes ? filteredPage === 0 : currentPage === 0}
